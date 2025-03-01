@@ -1,0 +1,6 @@
+@RebusPublisher_HostAddress = http://localhost:5172
+
+GET {{RebusPublisher_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
