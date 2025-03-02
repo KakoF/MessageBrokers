@@ -1,5 +1,4 @@
-﻿using Confluent.Kafka;
-using Domain.Models;
+﻿using Domain.Models;
 using Rebus.Auditing.Messages;
 using Rebus.Backoff;
 using Rebus.Config;
