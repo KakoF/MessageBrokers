@@ -1,10 +1,19 @@
-version: '3.7'
 
 networks:
-  kafka_network:
+  brokers_network:
     driver: bridge
 
 services:
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: masstransit/rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - brokers_network
+
   zookeeper:
     image: 'confluentinc/cp-zookeeper:latest'
     environment:
@@ -13,7 +22,7 @@ services:
     ports:
       - '2181:2181'
     networks:
-      - kafka_network
+      - brokers_network
 
   kafka:
     image: 'confluentinc/cp-kafka:latest'
@@ -34,7 +43,7 @@ services:
       - '9092:9092'
       - '29092:29092'
     networks:
-      - kafka_network
+      - brokers_network
     #volumes:
     #  - ./create-topics.sh:/create-topics.sh
     #command: bash -c "/create-topics.sh && /etc/confluent/docker/run"  # Executa o script de criação de tópicos ao iniciar
@@ -49,4 +58,4 @@ services:
     ports:
       - '8080:8080'
     networks:
-      - kafka_network
+      - brokers_network

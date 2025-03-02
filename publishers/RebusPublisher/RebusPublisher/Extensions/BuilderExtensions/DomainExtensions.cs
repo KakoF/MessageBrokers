@@ -8,7 +8,8 @@ namespace RebusPublisher.Extensions.BuilderExtensions
         public static void AddDomainExtensions(this IServiceCollection services, IConfigurationManager configuration)
 		{
 			services.AddScoped<IKafkaMessagePublisher, KafkaMessagePublisher>();
-			services.AddSingleton(new KafkaInitializer(configuration["Kafka:BrokerAddress"]!));
+			services.AddScoped<IRabbitMessagePublisher, RabbitMessagePublisher>();
+			//services.AddSingleton(new KafkaInitializer(configuration["Kafka:BrokerAddress"]!));
 		}
     }
 }
