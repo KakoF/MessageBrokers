@@ -1,21 +1,16 @@
-﻿using Domain.Infrastructure.Interfaces;
+﻿using Domain.Infrastructure.Abstracts;
+using Domain.Infrastructure.Interfaces;
 using Domain.Models;
 using Rebus.Bus;
+using Rebus.ServiceProvider;
 
 namespace Infrastructure.Bus
 {
-	public class KafkaMessagePublisher : IKafkaMessagePublisher
+	public class KafkaMessagePublisher : MessagePublisherBase<KafkaModel>, IKafkaMessagePublisher
 	{
-		private readonly IBus _bus;
-
-		public KafkaMessagePublisher(IBus bus)
+		protected override string _busName => "kafka_publisher";
+		public KafkaMessagePublisher(IBusRegistry bus) : base(bus)
 		{
-			_bus = bus;
-		}
-
-		public async Task PublishMessageAsync(KafkaModel message)
-		{
-			await _bus.Send(message);
 		}
 	}
 }
