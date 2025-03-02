@@ -27,6 +27,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT, OUTSIDE:PLAINTEXT
       KAFKA_LISTENER_NAME_INSIDE: INSIDE
       KAFKA_LISTENER_NAME_OUTSIDE: OUTSIDE
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR : 1
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
     ports:
@@ -34,7 +35,9 @@ services:
       - '29092:29092'
     networks:
       - kafka_network
-
+    #volumes:
+    #  - ./create-topics.sh:/create-topics.sh
+    #command: bash -c "/create-topics.sh && /etc/confluent/docker/run"  # Executa o script de criação de tópicos ao iniciar
   kafka-ui:
     image: 'provectuslabs/kafka-ui:latest'
     depends_on:

@@ -1,3 +1,4 @@
+using Rebus.Bus;
 using Rebus.Config;
 using RebusPublisher.Extensions.AppExtensions;
 using RebusPublisher.Extensions.BuilderExtensions;
@@ -20,5 +21,6 @@ app.ConfigureSwagger(app.Environment);
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
 
 app.Run();

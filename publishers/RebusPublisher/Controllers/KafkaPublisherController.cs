@@ -1,4 +1,5 @@
 using Domain.Infrastructure.Interfaces;
+using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RebusPublisher.Controllers
@@ -16,7 +17,7 @@ namespace RebusPublisher.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> PostAsync([FromBody] object message)
+		public async Task<IActionResult> PostAsync([FromBody] KafkaModel message)
 		{
 			await _publisher.PublishMessageAsync(message);
 			return Ok("Message sended");
