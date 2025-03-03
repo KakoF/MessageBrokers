@@ -14,8 +14,7 @@ namespace RebusPublisher.Extensions.BuilderExtensions
 		{
 			
 			services.AddRebus(configure => configure
-						.Transport(t => t.UseKafkaAsOneWayClient(
-							configuration["Kafka:BrokerAddress"]))
+						.Transport(t => t.UseKafkaAsOneWayClient(configuration["Kafka:BrokerAddress"]))
 						.Routing(r => r.TypeBased().Map<KafkaModel>(configuration["Kafka:TopicName"]))
 						.Options(t => t.RetryStrategy(errorQueueName: "DLQ_" + configuration["Kafka:TopicName"], maxDeliveryAttempts: 5))
 						.Options(t => t.EnableMessageAuditing(auditQueue: "Audit_" + configuration["Kafka:TopicName"]))
@@ -30,8 +29,7 @@ namespace RebusPublisher.Extensions.BuilderExtensions
 
 
 			services.AddRebus(configure => configure
-						.Transport(t => t.UseRabbitMqAsOneWayClient(
-							connectionString: configuration["RabbitMq:ConnectionString"]))
+						.Transport(t => t.UseRabbitMqAsOneWayClient(connectionString: configuration["RabbitMq:ConnectionString"]))
 						.Routing(r => r.TypeBased().Map<RabbitModel>(configuration["RabbitMq:QueueName"]))
 						.Options(t => t.RetryStrategy(errorQueueName: "DLQ_" + configuration["RabbitMq:QueueName"], maxDeliveryAttempts: 5))
 						.Options(t => t.EnableMessageAuditing(auditQueue: "Audit_" + configuration["RabbitMq:QueueName"]))

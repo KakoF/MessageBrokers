@@ -13,46 +13,42 @@ namespace RebusConsumer.Extensions.BuilderExtensions
 	{
 		public static void AddServiceRebus(this IServiceCollection services, IConfigurationManager configuration)
 		{
-
 			services.AddRebus(configure => configure
 					.Transport(t => t.UseKafka(configuration["Kafka:BrokerAddress"], configuration["Kafka:TopicName"]))
 					.Routing(r => r.TypeBased().Map<KafkaModel>(configuration["Kafka:TopicName"]))
-					.Options(o => o.SetNumberOfWorkers(5))
-					.Options(t => t.RetryStrategy(
-						errorQueueName: "DLQ_" + configuration["Kafka:TopicName"], 
-						maxDeliveryAttempts: 5 
-						)
-					)
-					.Options(t => t.EnableMessageAuditing(auditQueue: "Audit_" + configuration["Kafka:TopicName"]))
-					.Options(t => t.SetBackoffTimes(new[] {
-						TimeSpan.FromSeconds(10),
-						TimeSpan.FromSeconds(30),
-						TimeSpan.FromSeconds(50),
-						TimeSpan.FromSeconds(100),
-						TimeSpan.FromSeconds(150)
-					})), isDefaultBus: true, key: "kafka_publisher");
+					.Options(o => {
+						o.SetNumberOfWorkers(5);
+						o.RetryStrategy(errorQueueName: "DLQ_" + configuration["Kafka:TopicName"], maxDeliveryAttempts: 5);
+						o.EnableMessageAuditing(auditQueue: "Audit_" + configuration["Kafka:TopicName"]);
+						o.SetBackoffTimes(new[] {
+							TimeSpan.FromSeconds(10),
+							TimeSpan.FromSeconds(30),
+							TimeSpan.FromSeconds(50),
+							TimeSpan.FromSeconds(100),
+							TimeSpan.FromSeconds(150)
+						});
+					})
+					, isDefaultBus: true, key: "kafka_publisher");
 
 			services.AddRebus(configure => configure
 					.Transport(t => t.UseRabbitMq(configuration["RabbitMq:ConnectionString"], configuration["RabbitMq:QueueName"]))
 					.Routing(r => r.TypeBased().Map<RabbitModel>(configuration["RabbitMq:QueueName"]))
-					.Options(o => o.SetNumberOfWorkers(5))
-					.Options(t => t.RetryStrategy(
-						errorQueueName: "DLQ_" + configuration["RabbitMq:QueueName"], 
-						maxDeliveryAttempts: 5 
-						)
-					)
-					.Options(t => t.EnableMessageAuditing(auditQueue: "Audit_" + configuration["RabbitMq:QueueName"]))
-					.Options(t => t.SetBackoffTimes(new[] {
-						TimeSpan.FromSeconds(10),
-						TimeSpan.FromSeconds(30),
-						TimeSpan.FromSeconds(50),
-						TimeSpan.FromSeconds(100),
-						TimeSpan.FromSeconds(150)
-					})), isDefaultBus: false, key: "rabbit_publisher");
+					.Options(o => {
+						o.SetNumberOfWorkers(5);
+						o.RetryStrategy(errorQueueName: "DLQ_" + configuration["RabbitMq:QueueName"], maxDeliveryAttempts: 5);
+						o.EnableMessageAuditing(auditQueue: "Audit_" + configuration["RabbitMq:QueueName"]);
+						o.SetBackoffTimes(new[] {
+							TimeSpan.FromSeconds(10),
+							TimeSpan.FromSeconds(30),
+							TimeSpan.FromSeconds(50),
+							TimeSpan.FromSeconds(100),
+							TimeSpan.FromSeconds(150)
+						});
+					})
+					, isDefaultBus: false, key: "rabbit_publisher");
 
 			services.AutoRegisterHandlersFromAssemblyOf<KafkaMessageHandler>();
 			services.AutoRegisterHandlersFromAssemblyOf<RabbitMessageHandler>();
-
 		}
 	}
 }
