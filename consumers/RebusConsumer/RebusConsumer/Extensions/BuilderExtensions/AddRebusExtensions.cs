@@ -17,6 +17,7 @@ namespace RebusConsumer.Extensions.BuilderExtensions
 			services.AddRebus(configure => configure
 					.Transport(t => t.UseKafka(configuration["Kafka:BrokerAddress"], configuration["Kafka:TopicName"]))
 					.Routing(r => r.TypeBased().Map<KafkaModel>(configuration["Kafka:TopicName"]))
+					.Options(o => o.SetNumberOfWorkers(5))
 					.Options(t => t.RetryStrategy(
 						errorQueueName: "DLQ_" + configuration["Kafka:TopicName"], 
 						maxDeliveryAttempts: 5 
@@ -34,6 +35,7 @@ namespace RebusConsumer.Extensions.BuilderExtensions
 			services.AddRebus(configure => configure
 					.Transport(t => t.UseRabbitMq(configuration["RabbitMq:ConnectionString"], configuration["RabbitMq:QueueName"]))
 					.Routing(r => r.TypeBased().Map<RabbitModel>(configuration["RabbitMq:QueueName"]))
+					.Options(o => o.SetNumberOfWorkers(5))
 					.Options(t => t.RetryStrategy(
 						errorQueueName: "DLQ_" + configuration["RabbitMq:QueueName"], 
 						maxDeliveryAttempts: 5 
